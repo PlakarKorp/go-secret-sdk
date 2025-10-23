@@ -1,0 +1,8 @@
+name: vault
+description: hashicorp's vault provider.
+version: v1.0.0
+connectors:
+  - type: secret_provider
+    executable: vault
+    homepage: https://github.com/PlakarKorp/go-secret-sdk
+    license: ISC
