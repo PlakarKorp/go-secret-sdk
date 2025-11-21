@@ -1,4 +1,4 @@
-module github.com/PlakarKorp/go-secrets-sdk
+module github.com/PlakarKorp/go-secret-sdk
 
 go 1.25.1
 
