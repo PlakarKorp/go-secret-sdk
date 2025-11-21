@@ -26,7 +26,7 @@ func newvault(ctx context.Context, opts map[string]string) (sdk.Provider, error)
 		p.mount = m
 	}
 
-	if sk, ok := opts["secretKey"]; ok {
+	if sk, ok := opts["secret_key"]; ok {
 		p.secretKey = sk
 	}
 
