@@ -39,7 +39,7 @@ func (r *rot13) Resolve(ctx context.Context, handle string) (string, error) {
 		} else if in[i] < 'a' || in[i] > 'z' {
 			return "", fmt.Errorf("bad input!")
 		} else {
-			out[i] = byte((int(in[i]) - 'a' + r.rot) % 26)
+			out[i] = 'a' + byte((int(in[i])-'a'+r.rot)%26)
 		}
 	}
 
