@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	sdk "github.com/PlakarKorp/go-secrets-sdk"
+	sdk "github.com/PlakarKorp/go-secret-sdk"
 )
 
 type rot13 struct {
