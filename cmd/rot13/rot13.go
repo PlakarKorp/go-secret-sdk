@@ -46,6 +46,10 @@ func (r *rot13) Resolve(ctx context.Context, handle string) (string, error) {
 	return string(out), nil
 }
 
+func (r *rot13) Close(ctx context.Context) error {
+	return nil
+}
+
 func main() {
 	sdk.Entrypoint(os.Args, newrot13)
 }

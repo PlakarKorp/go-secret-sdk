@@ -189,6 +189,78 @@ func (x *ResolveResponse) GetSecret() string {
 	return ""
 }
 
+type CloseRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CloseRequest) Reset() {
+	*x = CloseRequest{}
+	mi := &file_secret_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CloseRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CloseRequest) ProtoMessage() {}
+
+func (x *CloseRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_secret_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CloseRequest.ProtoReflect.Descriptor instead.
+func (*CloseRequest) Descriptor() ([]byte, []int) {
+	return file_secret_proto_rawDescGZIP(), []int{4}
+}
+
+type CloseResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CloseResponse) Reset() {
+	*x = CloseResponse{}
+	mi := &file_secret_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CloseResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CloseResponse) ProtoMessage() {}
+
+func (x *CloseResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_secret_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CloseResponse.ProtoReflect.Descriptor instead.
+func (*CloseResponse) Descriptor() ([]byte, []int) {
+	return file_secret_proto_rawDescGZIP(), []int{5}
+}
+
 var File_secret_proto protoreflect.FileDescriptor
 
 const file_secret_proto_rawDesc = "" +
@@ -203,10 +275,13 @@ const file_secret_proto_rawDesc = "" +
 	"\x0eResolveRequest\x12\x16\n" +
 	"\x06handle\x18\x01 \x01(\tR\x06handle\")\n" +
 	"\x0fResolveResponse\x12\x16\n" +
-	"\x06secret\x18\x01 \x01(\tR\x06secret2\xa3\x01\n" +
+	"\x06secret\x18\x01 \x01(\tR\x06secret\"\x0e\n" +
+	"\fCloseRequest\"\x0f\n" +
+	"\rCloseResponse2\xeb\x01\n" +
 	"\x0eSecretProvider\x12C\n" +
 	"\x04Init\x12\x1c.secret_provider.InitRequest\x1a\x1d.secret_provider.InitResponse\x12L\n" +
-	"\aResolve\x12\x1f.secret_provider.ResolveRequest\x1a .secret_provider.ResolveResponseB)Z'github.com/PlakarKorp/go-secret-sdk;sdkb\x06proto3"
+	"\aResolve\x12\x1f.secret_provider.ResolveRequest\x1a .secret_provider.ResolveResponse\x12F\n" +
+	"\x05Close\x12\x1d.secret_provider.CloseRequest\x1a\x1e.secret_provider.CloseResponseB)Z'github.com/PlakarKorp/go-secret-sdk;sdkb\x06proto3"
 
 var (
 	file_secret_proto_rawDescOnce sync.Once
@@ -220,22 +295,26 @@ func file_secret_proto_rawDescGZIP() []byte {
 	return file_secret_proto_rawDescData
 }
 
-var file_secret_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_secret_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_secret_proto_goTypes = []any{
 	(*InitRequest)(nil),     // 0: secret_provider.InitRequest
 	(*InitResponse)(nil),    // 1: secret_provider.InitResponse
 	(*ResolveRequest)(nil),  // 2: secret_provider.ResolveRequest
 	(*ResolveResponse)(nil), // 3: secret_provider.ResolveResponse
-	nil,                     // 4: secret_provider.InitRequest.ConfigEntry
+	(*CloseRequest)(nil),    // 4: secret_provider.CloseRequest
+	(*CloseResponse)(nil),   // 5: secret_provider.CloseResponse
+	nil,                     // 6: secret_provider.InitRequest.ConfigEntry
 }
 var file_secret_proto_depIdxs = []int32{
-	4, // 0: secret_provider.InitRequest.config:type_name -> secret_provider.InitRequest.ConfigEntry
+	6, // 0: secret_provider.InitRequest.config:type_name -> secret_provider.InitRequest.ConfigEntry
 	0, // 1: secret_provider.SecretProvider.Init:input_type -> secret_provider.InitRequest
 	2, // 2: secret_provider.SecretProvider.Resolve:input_type -> secret_provider.ResolveRequest
-	1, // 3: secret_provider.SecretProvider.Init:output_type -> secret_provider.InitResponse
-	3, // 4: secret_provider.SecretProvider.Resolve:output_type -> secret_provider.ResolveResponse
-	3, // [3:5] is the sub-list for method output_type
-	1, // [1:3] is the sub-list for method input_type
+	4, // 3: secret_provider.SecretProvider.Close:input_type -> secret_provider.CloseRequest
+	1, // 4: secret_provider.SecretProvider.Init:output_type -> secret_provider.InitResponse
+	3, // 5: secret_provider.SecretProvider.Resolve:output_type -> secret_provider.ResolveResponse
+	5, // 6: secret_provider.SecretProvider.Close:output_type -> secret_provider.CloseResponse
+	4, // [4:7] is the sub-list for method output_type
+	1, // [1:4] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
 	1, // [1:1] is the sub-list for extension extendee
 	0, // [0:1] is the sub-list for field type_name
@@ -252,7 +331,7 @@ func file_secret_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_secret_proto_rawDesc), len(file_secret_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
