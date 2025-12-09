@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	SecretProvider_Init_FullMethodName    = "/secret_provider.SecretProvider/Init"
 	SecretProvider_Resolve_FullMethodName = "/secret_provider.SecretProvider/Resolve"
+	SecretProvider_Close_FullMethodName   = "/secret_provider.SecretProvider/Close"
 )
 
 // SecretProviderClient is the client API for SecretProvider service.
@@ -29,6 +30,7 @@ const (
 type SecretProviderClient interface {
 	Init(ctx context.Context, in *InitRequest, opts ...grpc.CallOption) (*InitResponse, error)
 	Resolve(ctx context.Context, in *ResolveRequest, opts ...grpc.CallOption) (*ResolveResponse, error)
+	Close(ctx context.Context, in *CloseRequest, opts ...grpc.CallOption) (*CloseResponse, error)
 }
 
 type secretProviderClient struct {
@@ -59,12 +61,23 @@ func (c *secretProviderClient) Resolve(ctx context.Context, in *ResolveRequest, 
 	return out, nil
 }
 
+func (c *secretProviderClient) Close(ctx context.Context, in *CloseRequest, opts ...grpc.CallOption) (*CloseResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CloseResponse)
+	err := c.cc.Invoke(ctx, SecretProvider_Close_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SecretProviderServer is the server API for SecretProvider service.
 // All implementations must embed UnimplementedSecretProviderServer
 // for forward compatibility.
 type SecretProviderServer interface {
 	Init(context.Context, *InitRequest) (*InitResponse, error)
 	Resolve(context.Context, *ResolveRequest) (*ResolveResponse, error)
+	Close(context.Context, *CloseRequest) (*CloseResponse, error)
 	mustEmbedUnimplementedSecretProviderServer()
 }
 
@@ -80,6 +93,9 @@ func (UnimplementedSecretProviderServer) Init(context.Context, *InitRequest) (*I
 }
 func (UnimplementedSecretProviderServer) Resolve(context.Context, *ResolveRequest) (*ResolveResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Resolve not implemented")
+}
+func (UnimplementedSecretProviderServer) Close(context.Context, *CloseRequest) (*CloseResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Close not implemented")
 }
 func (UnimplementedSecretProviderServer) mustEmbedUnimplementedSecretProviderServer() {}
 func (UnimplementedSecretProviderServer) testEmbeddedByValue()                        {}
@@ -138,6 +154,24 @@ func _SecretProvider_Resolve_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SecretProvider_Close_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CloseRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SecretProviderServer).Close(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SecretProvider_Close_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SecretProviderServer).Close(ctx, req.(*CloseRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // SecretProvider_ServiceDesc is the grpc.ServiceDesc for SecretProvider service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -152,6 +186,10 @@ var SecretProvider_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Resolve",
 			Handler:    _SecretProvider_Resolve_Handler,
+		},
+		{
+			MethodName: "Close",
+			Handler:    _SecretProvider_Close_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

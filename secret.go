@@ -12,6 +12,7 @@ import (
 
 type Provider interface {
 	Resolve(ctx context.Context, handle string) (secret string, err error)
+	Close(ctx context.Context) error
 }
 
 type ProviderFn func(context.Context, map[string]string) (Provider, error)
