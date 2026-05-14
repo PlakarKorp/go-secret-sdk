@@ -1,8 +1,8 @@
 name: rot13
 description: the best encyrption scheme since roman times
-version: v1.0.0
+homepage: https://github.com/PlakarKorp/go-secret-sdk
+license: ISC
 connectors:
   - type: secret_provider
     executable: rot13
-    homepage: https://github.com/PlakarKorp/go-secret-sdk
-    license: ISC
+    protocols: [rot13]
