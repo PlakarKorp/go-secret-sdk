@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"net"
 	"os"
 
 	"google.golang.org/grpc"
@@ -24,6 +25,10 @@ func RunProvider(constructor ProviderFn) error {
 	}
 	defer conn.Close()
 
+	return RunProviderOn(constructor, listener)
+}
+
+func RunProviderOn(constructor ProviderFn, listener net.Listener) error {
 	server := grpc.NewServer()
 	RegisterSecretProviderServer(server, &secretServer{
 		constructor: constructor,
