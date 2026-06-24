@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-type StdioConn struct {
+type stdioconn struct {
 	stdin  *os.File
 	stdout *os.File
 
@@ -21,8 +21,8 @@ type StdioConn struct {
 
 var stdioaddr = &net.UnixAddr{Name: "stdio", Net: "unix"}
 
-func NewStdioConn(stdin, stdout *os.File, cmd *exec.Cmd, onclose func()) *StdioConn {
-	return &StdioConn{
+func newStdioConn(stdin, stdout *os.File, cmd *exec.Cmd, onclose func()) *stdioconn {
+	return &stdioconn{
 		stdin:   stdin,
 		stdout:  stdout,
 		onclose: onclose,
@@ -30,12 +30,12 @@ func NewStdioConn(stdin, stdout *os.File, cmd *exec.Cmd, onclose func()) *StdioC
 	}
 }
 
-func (c *StdioConn) Read(b []byte) (int, error)  { return c.stdin.Read(b) }
-func (c *StdioConn) Write(b []byte) (int, error) { return c.stdout.Write(b) }
-func (c *StdioConn) LocalAddr() net.Addr         { return stdioaddr }
-func (c *StdioConn) RemoteAddr() net.Addr        { return stdioaddr }
+func (c *stdioconn) Read(b []byte) (int, error)  { return c.stdin.Read(b) }
+func (c *stdioconn) Write(b []byte) (int, error) { return c.stdout.Write(b) }
+func (c *stdioconn) LocalAddr() net.Addr         { return stdioaddr }
+func (c *stdioconn) RemoteAddr() net.Addr        { return stdioaddr }
 
-func (c *StdioConn) close() (ret error) {
+func (c *stdioconn) close() (ret error) {
 	if c.onclose != nil {
 		c.onclose()
 	}
@@ -54,19 +54,19 @@ func (c *StdioConn) close() (ret error) {
 	return
 }
 
-func (c *StdioConn) Close() error {
+func (c *stdioconn) Close() error {
 	c.closeOnce.Do(func() {
 		c.closeErr = c.close()
 	})
 	return c.closeErr
 }
 
-func (c *StdioConn) SetDeadline(t time.Time) error {
+func (c *stdioconn) SetDeadline(t time.Time) error {
 	if err := c.SetReadDeadline(t); err != nil {
 		return err
 	}
 	return c.SetWriteDeadline(t)
 }
 
-func (c *StdioConn) SetReadDeadline(t time.Time) error  { return c.stdin.SetReadDeadline(t) }
-func (c *StdioConn) SetWriteDeadline(t time.Time) error { return c.stdout.SetWriteDeadline(t) }
+func (c *stdioconn) SetReadDeadline(t time.Time) error  { return c.stdin.SetReadDeadline(t) }
+func (c *stdioconn) SetWriteDeadline(t time.Time) error { return c.stdout.SetWriteDeadline(t) }

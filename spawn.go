@@ -61,7 +61,7 @@ func spawn(ctx context.Context, exe string, args []string) (*grpc.ClientConn, er
 		return nil, err
 	}
 
-	conn := NewStdioConn(stdin, stdout, cmd, nil)
+	conn := newStdioConn(stdin, stdout, cmd, nil)
 
 	return grpc.NewClient("stdio",
 		grpc.WithContextDialer(func(ctx context.Context, _ string) (net.Conn, error) {
