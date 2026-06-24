@@ -26,6 +26,8 @@ func unwrap(err error) error {
 	switch status.Code() {
 	case codes.Canceled:
 		return context.Canceled
+	case codes.DeadlineExceeded:
+		return context.DeadlineExceeded
 	default:
 		return fmt.Errorf("%s", status.Message())
 	}
