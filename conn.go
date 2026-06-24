@@ -33,9 +33,9 @@ func (l *singleConnListener) Addr() net.Addr {
 	return l.conn.LocalAddr()
 }
 
-// InitConn initializes the gRPC socket connection from stdio.
+// initconn initializes the gRPC socket connection from stdio.
 // It returns the net.Conn and a Listener wrapping it.
-func InitConn() (net.Conn, net.Listener, error) {
+func initconn() (net.Conn, net.Listener, error) {
 	ch := make(chan struct{})
 	conn := NewStdioConn(os.Stdin, os.Stdout, func() { close(ch) })
 

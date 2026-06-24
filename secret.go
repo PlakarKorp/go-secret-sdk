@@ -19,7 +19,7 @@ type Provider interface {
 type ProviderFn func(context.Context, map[string]string) (Provider, error)
 
 func RunProvider(constructor ProviderFn) error {
-	conn, listener, err := InitConn()
+	conn, listener, err := initconn()
 	if err != nil {
 		return fmt.Errorf("failed to initialize connection: %w", err)
 	}
