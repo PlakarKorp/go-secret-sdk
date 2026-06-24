@@ -3,6 +3,7 @@ package sdk
 import (
 	"net"
 	"os"
+	"sync"
 	"time"
 )
 
@@ -10,17 +11,28 @@ type StdioConn struct {
 	stdin  *os.File
 	stdout *os.File
 
+	closeOnce sync.Once
+	closeErr  error
+
 	onclose func()
 }
 
-func NewStdioConn() *StdioConn {
-	return &StdioConn{os.Stdin, os.Stdout, nil}
+var stdioaddr = &net.UnixAddr{Name: "stdio", Net: "unix"}
+
+func NewStdioConn(stdin, stdout *os.File, onclose func()) *StdioConn {
+	return &StdioConn{
+		stdin:   stdin,
+		stdout:  stdout,
+		onclose: onclose,
+	}
 }
 
 func (c *StdioConn) Read(b []byte) (int, error)  { return c.stdin.Read(b) }
 func (c *StdioConn) Write(b []byte) (int, error) { return c.stdout.Write(b) }
+func (c *StdioConn) LocalAddr() net.Addr         { return stdioaddr }
+func (c *StdioConn) RemoteAddr() net.Addr        { return stdioaddr }
 
-func (c *StdioConn) Close() (ret error) {
+func (c *StdioConn) close() (ret error) {
 	if c.onclose != nil {
 		c.onclose()
 	}
@@ -34,18 +46,11 @@ func (c *StdioConn) Close() (ret error) {
 	return
 }
 
-func (c *StdioConn) LocalAddr() net.Addr {
-	return &net.UnixAddr{
-		Name: "/dev/stdin",
-		Net:  "unix",
-	}
-}
-
-func (c *StdioConn) RemoteAddr() net.Addr {
-	return &net.UnixAddr{
-		Name: "/dev/stdin",
-		Net:  "unix",
-	}
+func (c *StdioConn) Close() error {
+	c.closeOnce.Do(func() {
+		c.closeErr = c.close()
+	})
+	return c.closeErr
 }
 
 func (c *StdioConn) SetDeadline(t time.Time) error {
