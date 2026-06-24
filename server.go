@@ -28,5 +28,8 @@ func (g *secretServer) Resolve(ctx context.Context, req *ResolveRequest) (*Resol
 }
 
 func (g *secretServer) Close(ctx context.Context, req *CloseRequest) (*CloseResponse, error) {
-	return nil, g.provider.Close(ctx)
+	if err := g.provider.Close(ctx); err != nil {
+		return nil, err
+	}
+	return &CloseResponse{}, nil
 }
