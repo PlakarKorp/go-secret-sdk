@@ -76,7 +76,7 @@ func spawn(ctx context.Context, exe string, args []string) (*grpc.ClientConn, er
 		conn.Close()
 		return nil, err
 	}
-	return client, err
+	return client, nil
 }
 
 func ExecSecretProvider(ctx context.Context, params map[string]string, exe string, args []string) (Provider, error) {
@@ -91,5 +91,5 @@ func ExecSecretProvider(ctx context.Context, params map[string]string, exe strin
 		return nil, err
 	}
 
-	return &grpcSecretProvider{sp, conn}, err
+	return &grpcSecretProvider{sp, conn}, nil
 }
