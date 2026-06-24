@@ -65,13 +65,18 @@ func spawn(ctx context.Context, exe string, args []string) (*grpc.ClientConn, er
 
 	conn := newStdioConn(stdin, stdout, cmd, nil)
 
-	return grpc.NewClient("stdio",
+	client, err := grpc.NewClient("stdio",
 		grpc.WithContextDialer(func(ctx context.Context, _ string) (net.Conn, error) {
 			return conn, nil
 		}),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithIdleTimeout(0),
 	)
+	if err != nil {
+		conn.Close()
+		return nil, err
+	}
+	return client, err
 }
 
 func ExecSecretProvider(ctx context.Context, params map[string]string, exe string, args []string) (Provider, error) {
