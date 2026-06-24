@@ -3,6 +3,7 @@ package sdk
 import (
 	"net"
 	"os"
+	"os/exec"
 	"sync"
 	"time"
 )
@@ -15,15 +16,17 @@ type StdioConn struct {
 	closeErr  error
 
 	onclose func()
+	cmd     *exec.Cmd
 }
 
 var stdioaddr = &net.UnixAddr{Name: "stdio", Net: "unix"}
 
-func NewStdioConn(stdin, stdout *os.File, onclose func()) *StdioConn {
+func NewStdioConn(stdin, stdout *os.File, cmd *exec.Cmd, onclose func()) *StdioConn {
 	return &StdioConn{
 		stdin:   stdin,
 		stdout:  stdout,
 		onclose: onclose,
+		cmd:     cmd,
 	}
 }
 
@@ -42,6 +45,11 @@ func (c *StdioConn) close() (ret error) {
 	}
 	if err := c.stdout.Close(); err != nil {
 		ret = err
+	}
+	if c.cmd != nil {
+		if err := c.cmd.Wait(); err != nil {
+			ret = err
+		}
 	}
 	return
 }
