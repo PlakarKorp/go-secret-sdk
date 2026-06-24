@@ -58,6 +58,8 @@ func spawn(ctx context.Context, exe string, args []string) (*grpc.ClientConn, er
 	}
 
 	if err := cmd.Start(); err != nil {
+		wr.Close()
+		rd.Close()
 		return nil, err
 	}
 
