@@ -66,7 +66,7 @@ func spawn(ctx context.Context, exe string, args []string) (*grpc.ClientConn, er
 	conn := newStdioConn(stdin, stdout, cmd, nil)
 
 	client, err := grpc.NewClient("127.0.0.1:0",
-		grpc.WithContextDialer(func(ctx context.Context, _ string) (net.Conn, error) {
+		grpc.WithContextDialer(func(context.Context, string) (net.Conn, error) {
 			return conn, nil
 		}),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
