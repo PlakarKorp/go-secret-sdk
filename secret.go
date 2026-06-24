@@ -17,31 +17,6 @@ type Provider interface {
 
 type ProviderFn func(context.Context, map[string]string) (Provider, error)
 
-type grpcProvider struct {
-	UnimplementedSecretProviderServer
-
-	provider    Provider
-	constructor ProviderFn
-}
-
-func (g *grpcProvider) Init(ctx context.Context, req *InitRequest) (*InitResponse, error) {
-	provider, err := g.constructor(ctx, req.Config)
-	if err != nil {
-		return nil, err
-	}
-
-	g.provider = provider
-	return &InitResponse{}, nil
-}
-
-func (g *grpcProvider) Resolve(ctx context.Context, req *ResolveRequest) (*ResolveResponse, error) {
-	secret, err := g.provider.Resolve(ctx, req.Handle)
-	if err != nil {
-		return nil, err
-	}
-	return &ResolveResponse{Secret: secret}, nil
-}
-
 func RunProvider(constructor ProviderFn) error {
 	conn, listener, err := InitConn()
 	if err != nil {
@@ -50,7 +25,7 @@ func RunProvider(constructor ProviderFn) error {
 	defer conn.Close()
 
 	server := grpc.NewServer()
-	RegisterSecretProviderServer(server, &grpcProvider{
+	RegisterSecretProviderServer(server, &secretServer{
 		constructor: constructor,
 	})
 
