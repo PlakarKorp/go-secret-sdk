@@ -43,6 +43,11 @@ func NewSecretProvider(ctx context.Context, conn *grpc.ClientConn, config map[st
 	return &secretClient{client: client}, nil
 }
 
+func (g *secretClient) Ping(ctx context.Context) error {
+	_, err := g.client.Ping(ctx, &PingRequest{})
+	return unwrap(err)
+}
+
 func (g *secretClient) Resolve(ctx context.Context, handle string) (string, error) {
 	res, err := g.client.Resolve(ctx, &ResolveRequest{
 		Handle: handle,

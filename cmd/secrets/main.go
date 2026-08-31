@@ -15,7 +15,7 @@ import (
 )
 
 func usage() {
-	fmt.Fprintf(os.Stderr, "usage: %s [-config file.json] [-o opt=val] name path [args...]\n",
+	fmt.Fprintf(os.Stderr, "usage: %s [-no-ping] [-config file.json] [-o opt=val] name path [args...]\n",
 		filepath.Base(os.Args[0]))
 	os.Exit(1)
 }
@@ -23,6 +23,7 @@ func usage() {
 func main() {
 	var (
 		opt_conffile string
+		opt_noping   bool
 		config       = make(map[string]string)
 	)
 
@@ -30,6 +31,7 @@ func main() {
 	log.SetFlags(0)
 
 	flag.StringVar(&opt_conffile, "config", "", "config file")
+	flag.BoolVar(&opt_noping, "noping", false, "skip ping")
 	flag.Func("o", "", func(o string) error {
 		k, v, ok := strings.Cut(o, "=")
 		if !ok {
@@ -93,6 +95,13 @@ func main() {
 	}
 
 	defer sp.Close(ctx)
+
+	if !opt_noping {
+		if err := sp.Ping(ctx); err != nil {
+			log.Fatalln("ping failed:", err)
+		}
+	}
+
 	val, err := sp.Resolve(ctx, path)
 	if err != nil {
 		log.Fatalf("failed to resolve %s: %v", path, err)
