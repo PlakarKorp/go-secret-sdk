@@ -19,6 +19,13 @@ func (g *secretServer) Init(ctx context.Context, req *InitRequest) (*InitRespons
 	return &InitResponse{}, nil
 }
 
+func (g *secretServer) Ping(ctx context.Context, req *PingRequest) (*PingResponse, error) {
+	if err := g.provider.Ping(ctx); err != nil {
+		return nil, err
+	}
+	return &PingResponse{}, nil
+}
+
 func (g *secretServer) Resolve(ctx context.Context, req *ResolveRequest) (*ResolveResponse, error) {
 	secret, err := g.provider.Resolve(ctx, req.Handle)
 	if err != nil {
