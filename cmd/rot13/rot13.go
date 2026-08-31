@@ -27,6 +27,8 @@ func newrot13(ctx context.Context, opts map[string]string) (sdk.Provider, error)
 	return &r, nil
 }
 
+func (r *rot13) Ping(ctx context.Context) error { return nil }
+
 func (r *rot13) Resolve(ctx context.Context, handle string) (string, error) {
 	var (
 		in  = []byte(strings.ToLower(handle))
